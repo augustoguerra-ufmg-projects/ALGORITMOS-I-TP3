@@ -21,14 +21,12 @@ int main()
 	cin>>alg_num;
 	cin>>n>>m;
 	
-	// graph_c G(n);
 	matrix_graph_c M(n);
 
 	string u,v;
 	for(int i=0;i<m;i++)
 	{
 		cin>>u>>v>>d;
-		// G.add_edge(u,v,d);
 		M.add_edge(u,v,d);
 	}
 	
@@ -38,20 +36,16 @@ int main()
 			TSP_brute_force(M);
 		break;
 		case 'd':
-			cout<<"Algoritmo de programacao dinamica\n";
+			TSP_dynamic_programming(M);
 		break;
 		case 'g':
-			cout<<"Algoritmo guloso\n";
+			TSP_greedy(M);
 		break;
 		default:
 			cout<<"Natureza do algoritmo invalida\n";
 	}	
 
-	// G.print();
-
-	cout<<"\n\n\n\n";
-
-	M.print();
+	// M.print();
 
 	return(0);
 }

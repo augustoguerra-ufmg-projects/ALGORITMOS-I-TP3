@@ -63,5 +63,102 @@ void TSP_brute_force(matrix_graph_c&G)
 			cout<<G.toString[v]<<" ";
 		cout<<"\n";		
 	}
-	else cout<<"eita\n"; // debugando
+}
+
+// programacao dinamica
+
+int DP(int v,int visited,matrix_graph_c& G,vector<vector<int>>& memo,vector<vector<int>>&circuit)
+{
+	if(visited==(1<<G.V)-1)
+		return(G.matrix_adj[v][0]==0?INT_MAX:G.matrix_adj[v][0]);
+	
+	if(memo[v][visited]!=-1)
+		return(memo[v][visited]);
+	
+	int min=INT_MAX;
+	
+	for(int i=0;i<G.V;i++)
+		if(!(visited & (1<<i)) && G.matrix_adj[v][i]!=0)
+		{
+			int cost=G.matrix_adj[v][i]+DP(i,visited | (1<<i),G,memo,circuit);
+			if(cost<min)
+			{
+				min=cost;
+				circuit[v][visited]=i;
+			}
+		}
+
+	return(memo[v][visited]=min);	
+}
+
+void TSP_dynamic_programming(matrix_graph_c& G)
+{
+	vector<vector<int>>memo(G.V,vector<int>(1<<G.V,-1)); // a memo requer Vx2^V de espaco armazenado
+	vector<vector<int>>circuit(G.V,vector<int>(1<<G.V,-1));
+
+	int min=DP(0,1,G,memo,circuit);
+
+	if(min!=INT_MAX)
+	{
+		cout<<min<<"\n";
+		int visited=1;
+		int curr=0;
+		cout<<G.toString[curr]<<" ";
+		while(true)
+		{
+			curr=circuit[curr][visited];
+			if(curr==-1)break;
+
+			visited |=(1<<curr);
+			cout<<G.toString[curr]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+// guloso
+
+int naive_local_search(matrix_graph_c&G,vector<int>&min_circuit)
+{
+	vector<bool>visited(G.V,false);
+	int result=0;
+	min_circuit.push_back(0);
+	visited[0]=true;
+
+	int curr=0;
+	for(int i=1;i<G.V;i++)
+	{
+		int next=-1;
+		int min=INT_MAX;
+		for(int v=0;v<G.V;v++)
+			if(!visited[v] and G.matrix_adj[curr][v]!=0 and G.matrix_adj[curr][v]<min)
+			{
+				min=G.matrix_adj[curr][v];
+				next=v;
+			}
+		if(next==-1)return(INT_MAX);
+
+		result+=min;
+		curr=next;
+		min_circuit.push_back(curr);
+		visited[curr]=true;
+	}
+	result+=G.matrix_adj[curr][0];	// preco de voltar a origem
+	return(result);
+}
+
+void TSP_greedy(matrix_graph_c& G)
+{
+	vector<int>min_circuit;
+	int min=INT_MAX;
+	
+	min=naive_local_search(G,min_circuit);
+
+	if(min!=INT_MAX)
+	{
+		cout<<min<<"\n";
+		for(int v:min_circuit)
+			cout<<G.toString[v]<<" ";
+		cout<<"\n";
+	}
 }
