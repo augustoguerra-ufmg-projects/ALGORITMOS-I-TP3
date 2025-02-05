@@ -1,4 +1,9 @@
-#include"../include/graph.h"
+//==========================================================================//
+//	autor:	augusto guerra de lima					    //
+//	arquivo	: main.cpp 						    //
+//	descricao : processa a entrada para o tp3			    //
+//==========================================================================//
+
 #include"../include/matrix.h"
 #include"../include/alg.h"
 using namespace std;
@@ -44,8 +49,6 @@ int main()
 		default:
 			cout<<"Natureza do algoritmo invalida\n";
 	}	
-
-	// M.print();
 
 	return(0);
 }

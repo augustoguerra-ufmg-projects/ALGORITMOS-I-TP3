@@ -1,12 +1,20 @@
+//
+//	autor : augusto guerra de lima
+//	arquivo	: matrix.cpp
+//	descricao : implementa metodos para a representacao por matriz de adjacencia do grafo no tp3
+//
+
 #include<bits/stdc++.h>
 #include"../include/matrix.h"
 using namespace std;
 
+// construtor
 matrix_graph_c::matrix_graph_c(int V):V(V),E(0)
 {
 	matrix_adj.resize(V,vector<int>(V,0)); 
 }
 
+// adciona aresta usando map para lidar com strings apenas na entrada
 void matrix_graph_c::add_edge(string&u,string&v,int d)
 {
 	if(toInt.find(u)==toInt.end())
@@ -28,6 +36,7 @@ void matrix_graph_c::add_edge(string&u,string&v,int d)
 	E++;
 }
 
+// printa o grafo finalidade de debugar
 void matrix_graph_c::print()
 {
 	cout<<"     ";

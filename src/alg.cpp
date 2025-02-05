@@ -1,7 +1,20 @@
+//
+//	autor : augusto guerra de lima
+//	arquivo	: alg.cpp
+//	descricao : implementa as estrategias de algoritmos utilizados no tp3
+//
+
 #include<bits/stdc++.h>
 #include"../include/matrix.h"
 using namespace std;
 
+//=================================================================================================================
+//	Forca bruta
+//=================================================================================================================
+
+/*
+ *	exhaustive_search : gera permutacoes dos vertices para decidir melhor circuito
+ */
 void exhaustive_search(vector<int>&vertices,int index,matrix_graph_c&G,int& min, vector<int>& min_circuit)
 {
 	// permutacao completa deve ser testada como solucao
@@ -43,6 +56,9 @@ void exhaustive_search(vector<int>&vertices,int index,matrix_graph_c&G,int& min,
 	}
 }
 
+/*
+ *	TSP_brute_force : processa o grafo para uma busca exaustiva e imprime o melhor custo e circuito
+ */
 void TSP_brute_force(matrix_graph_c&G)
 {
 	vector<int>vertices;
@@ -63,20 +79,28 @@ void TSP_brute_force(matrix_graph_c&G)
 			cout<<G.toString[v]<<" ";
 		cout<<"\n";		
 	}
-}
+} // end Forca bruta
 
-// programacao dinamica
+//===========================================================================================================
+//	Programacao dinamica
+//===========================================================================================================
 
+/*
+ *	DP : realiza a busca do melhor custo e a construcao do melhor circuito usando memoizacao e bitmasking
+ */
 int DP(int v,int visited,matrix_graph_c& G,vector<vector<int>>& memo,vector<vector<int>>&circuit)
 {
+	// caso base computou todos
 	if(visited==(1<<G.V)-1)
 		return(G.matrix_adj[v][0]==0?INT_MAX:G.matrix_adj[v][0]);
 	
+	// caso estado ja calculado na matriz de memoizacao
 	if(memo[v][visited]!=-1)
 		return(memo[v][visited]);
 	
 	int min=INT_MAX;
 	
+	// computa funcao objetivo minima naquele estado
 	for(int i=0;i<G.V;i++)
 		if(!(visited & (1<<i)) && G.matrix_adj[v][i]!=0)
 		{
@@ -88,9 +112,13 @@ int DP(int v,int visited,matrix_graph_c& G,vector<vector<int>>& memo,vector<vect
 			}
 		}
 
+	// salva na matriz de memoizacao
 	return(memo[v][visited]=min);	
 }
 
+/*
+ * 	TSP_dynamic_programming	: processa grafo para uma busca de programação dinamica
+ */
 void TSP_dynamic_programming(matrix_graph_c& G)
 {
 	vector<vector<int>>memo(G.V,vector<int>(1<<G.V,-1)); // a memo requer Vx2^V de espaco armazenado
@@ -114,10 +142,15 @@ void TSP_dynamic_programming(matrix_graph_c& G)
 		}
 		cout<<"\n";
 	}
-}
+} // end Programacao dinamica
 
-// guloso
+//==================================================================
+//	Guloso
+//==================================================================
 
+/*
+ * 	naive_local_search : busca local nas vizinhancas do vertice
+ */
 int naive_local_search(matrix_graph_c&G,vector<int>&min_circuit)
 {
 	vector<bool>visited(G.V,false);
@@ -147,6 +180,9 @@ int naive_local_search(matrix_graph_c&G,vector<int>&min_circuit)
 	return(result);
 }
 
+/*
+ *	TSP_greedy : processa grafo para busca local
+ */
 void TSP_greedy(matrix_graph_c& G)
 {
 	vector<int>min_circuit;
@@ -161,4 +197,4 @@ void TSP_greedy(matrix_graph_c& G)
 			cout<<G.toString[v]<<" ";
 		cout<<"\n";
 	}
-}
+} // end Guloso
